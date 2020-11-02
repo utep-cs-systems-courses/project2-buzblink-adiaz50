@@ -99,7 +99,7 @@ void state_SIMULTANIOUS(){ // everything turns on simultaniously
   }
 
 }
-void states(){
+void state_advance(){
 
   switch(button){
 

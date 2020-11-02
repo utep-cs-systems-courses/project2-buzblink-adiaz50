@@ -27,7 +27,6 @@ void led_update(){
     char ledFlags = 0; /* by default, no LEDs on */
 
 
-f
     ledFlags |= switch_state_down ? LED_GREEN : 0;
 
     ledFlags |= switch_state_down ? 0 : LED_RED;
