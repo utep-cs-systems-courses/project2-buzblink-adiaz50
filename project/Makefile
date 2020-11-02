@@ -24,7 +24,7 @@ all: project.elf
 
 #additional rules for files
 
-salt.elf: ${COMMON_OBJECTS}p1_interrupt_handler.o buzzer.o main.o stateMachines.o led.o 
+project.elf: ${COMMON_OBJECTS}p1_interrupt_handler.o buzzer.o main.o stateMachines.o led.o 
 switches.o wdInterruptHandler.o ../lib/libTimer.a
 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
