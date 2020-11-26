@@ -4,34 +4,29 @@
 #include "switches.h"
 #include "buzzer.h"
 
-static int state_change = 0;
-
-void state_RED(){ // red light make a small sound
+char state1(){ // red light make a small sound
 
   red_on = 1;
-
   green_on = 0;
-
   buzzer_set_period(500);
 
 }
 
 
 
-void state_GREEN(){ // green light on make bigger sound
+void state2(){ // green light on make bigger sound
 
-  red_on = 0;
-
+  red_on = 0
   green_on = 1;
-
   buzzer_set_period(1000);
 
 }
 
 
 
-void state_BOTH(){ // leds at same time sound when leds are off
-
+void state3(){ // leds at same time sound when leds are off
+  static short state_change = 0;
+  
   switch(state_change){
 
     case 0:
@@ -40,7 +35,7 @@ void state_BOTH(){ // leds at same time sound when leds are off
 
       green_on = 1;
 
-      state_change = 1;
+      state_change++;
 
       break;
 
@@ -62,15 +57,16 @@ void state_BOTH(){ // leds at same time sound when leds are off
 
 
 
-void state_SIMULTANIOUS(){ // everything turns on simultaniously
-
-  switch(state_change){
+void state4(){ // everything turns on simultaniously
+  static short change = 0;
+  
+  switch(change){
 
     case 0:
 
       red_on = 1;
 
-      state_change = 1;
+      change++;
 
       break;
 
@@ -80,7 +76,7 @@ void state_SIMULTANIOUS(){ // everything turns on simultaniously
 
       green_on = 1;
 
-      state_change = 2;
+      change++;
 
       break;
 
@@ -92,16 +88,15 @@ void state_SIMULTANIOUS(){ // everything turns on simultaniously
 
       buzzer_set_period(3000);
 
-      state_change = 0;
+      change = 0;
 
       break;
-
   }
-
 }
+
 void state_advance(){
 
-  switch(button){
+  switch(switch_state_changed){
 
     case 0:
 
@@ -128,7 +123,7 @@ void state_advance(){
       break;
 
   }
-
+  
+  leds_changed = 1;
   led_update();
-
 }

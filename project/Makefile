@@ -4,7 +4,7 @@ COMMON_OBJECTS  =
 
 CPU             = msp430g2553
 
-CFLAGS          = -mmcu=${CPU} -I../h
+CFLAGS          = -mmcu=${CPU} -I/h
 
 LDFLAGS		= -L/opt/ti/msp430_gcc/include
 
@@ -24,27 +24,17 @@ all: project.elf
 
 #additional rules for files
 
-project.elf: ${COMMON_OBJECTS}p1_interrupt_handler.o buzzer.o main.o stateMachines.o led.o 
-switches.o wdInterruptHandler.o ../libT/libTimer.a
-
+project.elf: ${COMMON_OBJECTS}p1_interrupt_handler.o buzzer.o main.o stateMachines.o led.o switches.o wdInterruptHandler.o /libT/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 
-
 load: project.elf
-
 	msp430loader.sh project.elf
 
-
-
 clean:
-
-	rm -f *.o *.elf *~
-
-
+	rm -f *.o *.elf
 
 led.o: led.c led.h
-
 
 buzzer.o: buzzer.h
 

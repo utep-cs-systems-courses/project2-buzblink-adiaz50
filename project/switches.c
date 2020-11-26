@@ -1,14 +1,10 @@
 #include <msp430.h>
-
 #include "switches.h"
-
 #include "led.h"
+#include "stateMachines.h"
 
 
-
-char switch_state_down, switch_state_changed; /* effectively boolean */
-
-
+char switch_state_changed; /* effectively boolean */
 
 static char switch_update_interrupt_sense(){
 
@@ -24,8 +20,6 @@ static char switch_update_interrupt_sense(){
 
 }
 
-
-
 void switch_init(){  
 
   P2REN |= SWITCHES;		/* enables resistors for switches */
@@ -35,21 +29,22 @@ void switch_init(){
   P2OUT |= SWITCHES;		/* pull-ups for switches */
 
   P2DIR &= ~SWITCHES;		/* set switches' bits for input */
-
+  
   switch_update_interrupt_sense();
-
   led_update();
-
+  
 }
-
-
 
 short switch_interrupt_handler(){
   char p2val = switch_update_interrupt_sense();
-  
-  switch_state_down = (p2val & SW1) ? 0 : 1; /* 0 when SW1 is up */
 
-  switch_state_changed = 1;
+  if( (p2Val & SW1) == 0){
+    switch_state_changed = 1;
+  }else if( (p2Val & SW2) == 0)
+    switch_state_changed = 2;
+  else if( (p2Val & SW3) == 0)
+    switch_state_changed = 3;
+  else if( ( p2Val & SW4) == 0)
+    switch_state_changed = 4;
 
-  led_update();
 }
