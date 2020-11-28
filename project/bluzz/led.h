@@ -19,7 +19,7 @@
 
 // these are boolean flags
 
-extern unsigned char led_changed, green_on;
+extern unsigned char leds_changed, green_on;
 extern unsigned char red_on;
 
 void led_init();

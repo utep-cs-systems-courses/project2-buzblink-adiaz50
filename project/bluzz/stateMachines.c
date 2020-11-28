@@ -4,30 +4,6 @@
 #include "switches.h"
 #include "buzzer.h"
 
-
-/*
-// Toggling red and green leds.
-
-// If state2_status == 1, increase pitch. Otherwise, decrease pitch.
-
-void buzzer_advance(){
-
-  if (state2_status) freq += 225;
-
-  else freq -= 450;
-
-
-
-  short cycles = 2000000/freq;  // 2000000 / frequency gives us the correct period.
-
-  buzzer_set_period(cycles);
-
-}
-*/
-
-////////////////
-
-
 char toggle_red(){
   static char state = 0;
 
@@ -53,21 +29,21 @@ char toggle_green(){
   return changed;
 }
 
-
-/*
 char state1(){ // red light make a small sound
-  toggle_red();
-  toggle_green();
-  buzzer_set_period(500);
+  char changed = 0;
+  static enum {R = 0, G = 1} color = G;
+  switch(color){
+  case R: changed = toggle_red(); color = G; break;
+  case G: changed = toggle_green(); color = R; break;
+  }
   leds_changed = 1;
   led_update();
   return 1;
 }
 
 char state2(){ // green light on make bigger sound
-  red_on = 0;
   green_on = 1;
-  buzzer_set_period(1000);
+  buzzer_set_period(0);
   leds_changed = 1;
   led_update();
   return 1;
@@ -104,7 +80,7 @@ char state4(){ // everything turns on simultaniously
   
   switch(change){
     case 0:
-
+      
       red_on = 1;
       change++;
       break;
@@ -135,41 +111,33 @@ char state4(){ // everything turns on simultaniously
   led_update();
   return 1;
 }
-*/
+
 
 void state_advance(){
   char changed = 0;
-  /*
+  
   switch(switch_state_changed){
 
     case 1:
+      
       changed = state1();
-      break; 
+      break;
+      
     case 2:
+      
       changed = state2();
       break;
 
     case 3:
 
       changed = state3();
-
       break;
 
     case 4:
 
       changed = state4();
-
       break;
 
   }
-  */
-  static enum{R = 0, G = 1} color = G;
-  switch(color){
-  case R: changed = toggle_red(); color = G; break;
-  case G: changed = toggle_green(); color = R; break;
-  }
-  
-  led_changed = changed;
-  led_update();
 }
 

@@ -13,7 +13,7 @@ AS		= msp430-elf-as
 all: bluzz.elf
 
 #additional rules for files
-bluzz.elf: ${COMMON_OBJECTS} main.o led.o buzzer.o switches.o stateMachines.o wdInterruptHandler.o p1_interrupt_handler.o ../lib/libTimer.a
+bluzz.elf: ${COMMON_OBJECTS} main.o led.o buzzer.o switches.o stateMachines.o wdtinterrupthandler.o p1_interrupt_handler.o ../bluzz/timerLib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 load: bluzz.elf
