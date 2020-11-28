@@ -35,16 +35,16 @@ void switch_init(){
   
 }
 
-short switch_interrupt_handler(){
+void switch_interrupt_handler(){
   char p2val = switch_update_interrupt_sense();
 
-  if( (p2Val & SW1) == 0){
+  if( (p2val & SW1) == 0){
     switch_state_changed = 1;
-  }else if( (p2Val & SW2) == 0)
+  }else if( (p2val & SW2) == 0)
     switch_state_changed = 2;
-  else if( (p2Val & SW3) == 0)
+  else if( (p2val & SW3) == 0)
     switch_state_changed = 3;
-  else if( ( p2Val & SW4) == 0)
+  else if( ( p2val & SW4) == 0)
     switch_state_changed = 4;
-
+  
 }
