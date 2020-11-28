@@ -4,6 +4,10 @@
 #include "switches.h"
 #include "buzzer.h"
 
+static char dim_select = 0;
+static char do_dim = 0;
+static char dimState = 0;
+
 char toggle_red(){
   static char state = 0;
 
@@ -74,44 +78,113 @@ char state3(){ // leds at same time sound when leds are off
 }
 
 
-
 char state4(){ // everything turns on simultaniously
   static short change = 0;
   
   switch(change){
-    case 0:
-      
-      red_on = 1;
-      change++;
-      break;
-
     case 1:
-
-      red_on = 0;
-
-      green_on = 1;
-
-      change++;
-
+      
+      do_dim = 0;
+      dim_select++;
       break;
 
     case 2:
 
+      do_dim = 1;
+      dim_select++;
+      break;
+
+    case 3:
+
       red_on = 0;
 
       green_on = 0;
+      
+      do_dim = 1;
 
-      buzzer_set_period(3000);
+      dim_select++;
+      
+      break;
 
-      change = 0;
+    case 4:
+      do_dim = 1;
+
+      dim_select++;
 
       break;
   }
+  
   leds_changed = 1;
   led_update();
   return 1;
 }
 
+void dim_state_advance(){
+  switch(dim_select){
+  case 0:
+    red_on = 0;
+    green_on = 0;
+    break;
+  case 1:
+    dim_25();
+    break;
+  case 2:
+    dim_50();
+    break;
+  case 3:
+    dim_75();
+    break;
+  case 4:
+    red_on = 1;
+    green_on = 1;
+    break;
+  }
+}
+
+void dim_25(){
+  switch(dimState){
+  case 0:
+    red_on = 1;
+    break;
+  case 1:
+  case 2:
+  case 3:
+    red_on = 0;
+    break;
+  default: dimState = 0;
+  }
+  led_update();
+}
+
+void dim_50(){
+  switch(dimState){
+  case 0:
+  case 1:
+    red_on = 1;
+    break;
+  case 2:
+  case 3:
+    red_on = 0;
+    break;
+  default: dimState = 0;
+  }
+  led_update();
+}
+
+void dim_75(){
+  switch(dimState){
+  case 0:
+    red_on = 0;
+    break;
+  case 1:
+  case 2:
+  case 3:
+    red_on = 1;
+    break;
+  default: dimState = 0;
+  }
+  led_update();
+}
 
 void state_advance(){
   char changed = 0;
