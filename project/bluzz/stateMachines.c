@@ -14,10 +14,12 @@ char toggle_red(){
   switch(state){
   case 0:
     red_on = 1;
+    buzzer_set_period(100);
     state = 1;
     break;
   case 1:
     red_on = 0;
+    buzzer_set_period(0);
     state = 0;
     break;
   }
@@ -28,32 +30,33 @@ char toggle_green(){
   char changed = 0;
   if(red_on){
     green_on ^= 1;
+    buzzer_set_period(50);
     changed = 1;
   }
   return changed;
 }
 
-char state1(){ // red light make a small sound
+char state1(){ 
   char changed = 0;
   static enum {R = 0, G = 1} color = G;
   switch(color){
   case R: changed = toggle_red(); color = G; break;
   case G: changed = toggle_green(); color = R; break;
   }
-  leds_changed = 1;
+  leds_changed = changed;
   led_update();
-  return 1;
 }
 
-char state2(){ // green light on make bigger sound
+char state2(){ // green light on and make bigger sound
+  red_on = 0;
   green_on = 1;
-  buzzer_set_period(0);
+  buzzer_set_period(500);
   leds_changed = 1;
   led_update();
   return 1;
 }
 
-char state3(){ // leds at same time sound when leds are off
+char state3(){ // leds turn on at the same time, sound turns on when leds are off
   static short state_change = 0;
   
   switch(state_change){
@@ -61,7 +64,7 @@ char state3(){ // leds at same time sound when leds are off
       
       red_on = 1;
       green_on = 1;
-      state_change++;
+      state_change = 1;
       break;
 
     case 1:
@@ -82,38 +85,28 @@ char state4(){ // everything turns on simultaniously
   static short change = 0;
   
   switch(change){
+    case 0:
+      dim_state_advance();
+      change++;
+      break;
+
     case 1:
-      
-      do_dim = 0;
-      dim_select++;
+      dim_state_advance();
+      change++;
       break;
 
     case 2:
-
-      do_dim = 1;
-      dim_select++;
+      dim_state_advance();
+      change++;
+      
       break;
 
     case 3:
-
-      red_on = 0;
-
-      green_on = 0;
-      
-      do_dim = 1;
-
-      dim_select++;
-      
-      break;
-
-    case 4:
-      do_dim = 1;
-
-      dim_select++;
-
+      dim_state_advance();
+      change = 0;
+      buzzer_set_period(350);
       break;
   }
-  
   leds_changed = 1;
   led_update();
   return 1;
@@ -122,19 +115,24 @@ char state4(){ // everything turns on simultaniously
 void dim_state_advance(){
   switch(dim_select){
   case 0:
+    dim_select++;
     red_on = 0;
     green_on = 0;
     break;
   case 1:
+    dim_select++;
     dim_25();
     break;
   case 2:
+    dim_select++;
     dim_50();
     break;
   case 3:
+    dim_select++;
     dim_75();
     break;
   case 4:
+    dim_select = 0;
     red_on = 1;
     green_on = 1;
     break;
