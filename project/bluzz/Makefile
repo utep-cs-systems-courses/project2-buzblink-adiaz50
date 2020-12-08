@@ -24,7 +24,8 @@ clean:
 
 led.o: led.c led.h
 
-wdInterruptHandler.o: stateMachines.h buzzer.h switches.h
+# changed name for wdInterruptHandler.o
+wdtinterrupthandler.o: stateMachines.h buzzer.h switches.h
 
 stateMachines.o: led.h stateMachines.h buzzer.h
 
